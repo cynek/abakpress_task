@@ -1,8 +1,6 @@
 class Page < ActiveRecord::Base
-  class PathIncorrect < RuntimeError; end
 
   NAME_MATCH_STR = '[a-zA-Z0-9_]+'
-  #PATH_REGEXP = Regexp.new("\A(?:/#{NAME_MATCH_STR})+\Z")
 
   belongs_to :parent, class_name: :Page, foreign_key: :page_id
   has_many :children, class_name: :Page
