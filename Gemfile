@@ -40,3 +40,4 @@ gem 'jquery-rails'
 gem 'rspec-rails', '~> 2.0', :group => [:test, :development]
 gem 'capybara', :group => :test
 gem "shoulda-matchers", :group => :test
+gem 'factory_girl_rails', group: [:development, :test]
