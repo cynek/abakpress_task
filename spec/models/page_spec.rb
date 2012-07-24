@@ -7,6 +7,8 @@ describe Page do
   it { should allow_mass_assignment_of(:name) }
   it { should validate_format_of(:name).with('correct_page_name') }
   it { should validate_format_of(:name).not_with('!ncorrect_page_name') }
+  it { should validate_format_of(:name).not_with('add').with_message(:exclusion) }
+  it { should validate_format_of(:name).not_with('edit').with_message(:exclusion) }
   it { should allow_mass_assignment_of(:title) }
   it { should allow_mass_assignment_of(:text) }
   it { should_not allow_mass_assignment_of(:page_id) }
@@ -25,11 +27,22 @@ describe Page do
     it { described_class.find_by_path(root_page.path).should be == root_page }
     it { described_class.find_by_path(sub1_page.path).should be == sub1_page }
     it { described_class.find_by_path(sub1sub1_page.path).should be == sub1sub1_page }
+    shared_examples_for "with not existing page" do
+      it { expect { described_class.find_by_path('not/existing/page') }.to raise_error(ActiveRecord::RecordNotFound) }
+    end
+    context "with root page" do
+      before {root_page}
+      it_behaves_like "with not existing page"
+      it { described_class.find_by_path(nil).should be == root_page }
+    end
+    context "without root page" do
+      it_behaves_like "with not existing page"
+    end
   end
 
   describe "#path" do
-    it { root_page.path.should be == "/" }
-    it { sub1_page.path.should be == "/#{sub1_page.name}" }
-    it { sub1sub1_page.path.should be == "/#{sub1sub1_page.parent.name}/#{sub1sub1_page.name}" }
+    it { root_page.path.should be == root_page.name }
+    it { sub1_page.path.should be == "#{sub1_page.parent.name}/#{sub1_page.name}" }
+    it { sub1sub1_page.path.should be == "#{sub1sub1_page.parent.parent.name}/#{sub1sub1_page.parent.name}/#{sub1sub1_page.name}" }
   end
 end
