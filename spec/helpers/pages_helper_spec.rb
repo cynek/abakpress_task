@@ -11,5 +11,8 @@ require 'spec_helper'
 #   end
 # end
 describe PagesHelper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe "#title" do
+    it { helper.title.should be == 'Page' }
+    it { assign(:title, 't'); helper.title.should be == 't' }
+  end
 end

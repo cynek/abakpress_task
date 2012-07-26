@@ -1,5 +1,6 @@
 class PagesController < ApplicationController
   before_filter :find_page, :except => [:add_root, :create_root] # find base page for actions
+  before_filter :check_root_exists, :only => [:add_root, :create_root]
   rescue_from ActiveRecord::RecordNotFound, :with => :page_not_found
 
   def show
@@ -10,11 +11,7 @@ class PagesController < ApplicationController
   end
 
   def add_root
-    if Page.root
-      redirect_to root_path, notice: I18n.t('pages.add_root.root_already_exist')
-    else
-      @new_page = Page.new
-    end
+    @new_page = Page.new
   end
 
   def add
@@ -74,5 +71,9 @@ class PagesController < ApplicationController
       else
         redirect_to add_root_path, error: "#{I18n.t('pages.page_not_found')}\n#{I18n.t('pages.try_add_root_page')}"
       end
+    end
+
+    def check_root_exists
+      redirect_to root_path, notice: I18n.t('pages.add_root.root_already_exist') if Page.root
     end
 end
