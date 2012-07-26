@@ -10,6 +10,7 @@ describe Page do
   it { should validate_format_of(:name).not_with('!ncorrect_page_name') }
   it { should validate_format_of(:name).not_with('add').with_message(:exclusion) }
   it { should validate_format_of(:name).not_with('edit').with_message(:exclusion) }
+  it { should validate_presence_of(:title) }
   it { should allow_mass_assignment_of(:title) }
   it { should allow_mass_assignment_of(:text) }
   it { should_not allow_mass_assignment_of(:page_id) }
