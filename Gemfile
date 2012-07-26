@@ -43,3 +43,4 @@ gem "shoulda-matchers", :group => :test
 gem 'factory_girl_rails', group: [:development, :test]
 gem 'haml-rails'
 gem 'spork-rails', :group => :test
+gem 'draper'

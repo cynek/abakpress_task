@@ -55,6 +55,19 @@ class Page < ActiveRecord::Base
     end
   end
 
+  # All subpages in specified Array
+  #
+  # @return [Array<Page, Array>] found subpages seen as
+  #   [page, [
+  #     [subpage1, [
+  #       [subsubpage1, [...]],
+  #       ...]],
+  #     [subpage2, [...]],
+  #     ...]]
+  def subpages
+    [self, self.children.map(&:subpages)]
+  end
+
   private
 
     # validate of single root page

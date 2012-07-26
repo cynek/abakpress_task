@@ -2,8 +2,9 @@ require 'spec_helper'
 
 describe Page do
   let(:root_page) { FactoryGirl.create(:root_page) }
-  let(:sub1_page) { FactoryGirl.create(:sub1_page) }
-  let(:sub1sub1_page) { FactoryGirl.create(:sub1sub1_page) }
+  let(:sub1_page) { FactoryGirl.create(:sub1_page, parent: root_page) }
+  let(:sub1sub1_page) { FactoryGirl.create(:sub1sub1_page, parent: sub1_page) }
+  let(:sub2_page) { FactoryGirl.create(:sub2_page, parent: root_page) }
   it { should allow_mass_assignment_of(:name) }
   it { should validate_format_of(:name).with('correct_page_name') }
   it { should validate_format_of(:name).not_with('!ncorrect_page_name') }
@@ -44,5 +45,9 @@ describe Page do
     it { root_page.path.should be == root_page.name }
     it { sub1_page.path.should be == "#{sub1_page.parent.name}/#{sub1_page.name}" }
     it { sub1sub1_page.path.should be == "#{sub1sub1_page.parent.parent.name}/#{sub1sub1_page.parent.name}/#{sub1sub1_page.name}" }
+  end
+
+  describe "#subpages" do
+    it { sub1sub1_page; sub2_page; root_page.subpages.should be == [root_page, [ [sub1_page, [ [sub1sub1_page, [  ]] ]], [sub2_page, [  ]] ]] }
   end
 end
