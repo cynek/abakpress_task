@@ -11,6 +11,8 @@ class Page < ActiveRecord::Base
     :exclusion => { :in => %w( add edit ) }
   validate :root_page_is_unique, :if => :root?
 
+  before_save :parse_page
+
   # Search page by her route path. If page not found raise ActiveRecord::RecordNotFound
   #
   # @param [String] path route path to page
@@ -81,5 +83,9 @@ class Page < ActiveRecord::Base
     # @return [Array] list of page names
     def self.names_from_path(path)
       path.split('/').delete_if(&:blank?)
+    end
+
+    def parse_page
+      self.text = PageParser.to_html(self.text)
     end
 end

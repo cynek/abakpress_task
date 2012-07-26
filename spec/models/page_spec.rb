@@ -50,4 +50,13 @@ describe Page do
   describe "#subpages" do
     it { sub1sub1_page; sub2_page; root_page.subpages.should be == [root_page, [ [sub1_page, [ [sub1sub1_page, [  ]] ]], [sub2_page, [  ]] ]] }
   end
+
+  describe "on save" do
+    let(:correct_attr) { { :name => 'name1', :title => 'Name1', :text => "**[string]**" } }
+    before do
+      PageParser.stub!(:to_html).and_return('html')
+    end
+    it { page = Page.new(correct_attr); expect { page.save }.to change(page, :text).to('html') }
+
+  end
 end
